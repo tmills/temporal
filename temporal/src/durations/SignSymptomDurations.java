@@ -31,10 +31,10 @@ public class SignSymptomDurations {
 
 		final int maxHits = 1000000;
 		final String searchField = "content";
-		final String indexLocation = "/home/dima/data/mimic/index/";
-		final String signAndSymptomFile = "/home/dima/thyme/duration/data/unique-sign-symptoms.txt";
-		final String outputDirectory = "/home/dima/out/context/";
-		final int contextWindowInCharacters = 50;
+		final String indexLocation = "/home/tmill/mnt/rc-pub/resources/tweet_index";
+		final String signAndSymptomFile = "/home/tmill//Data/Projects/ctakes-temporal/durations/unique-disease-disorder.txt";
+		final String outputDirectory = "/home/tmill/Projects/duration_mining/temporal/output/disease_disorders/";
+		final int contextWindowInCharacters = 140;
 		final List<String> durationIndicators = Arrays.asList("for", "x");
 		
     IndexReader indexReader = IndexReader.open(FSDirectory.open(new File(indexLocation)));

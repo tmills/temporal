@@ -23,9 +23,9 @@ public class SearchUtility {
 	
 	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException, InvalidTokenOffsetsException {
 
-		final int maxHits = 250;
+		final int maxHits = 5000;
 		final String searchField = "content";
-		final String indexLocation = "/home/dima/data/mimic/index/";
+		final String indexLocation = "/home/tmill/mnt/rc-pub/resources/mimic/index";
 
 		String queryText = JOptionPane.showInputDialog("Enter query");
 		
@@ -44,7 +44,7 @@ public class SearchUtility {
   	for(ScoreDoc scoreDoc : scoreDocs) {
   		Document document = indexSearcher.doc(scoreDoc.doc);
   		String text = document.get(searchField).toLowerCase().replace('\n', ' ');
-  		String context = Utils.getContext(queryText, text, 20);
+  		String context = Utils.getContext(queryText, text, 140);
   		System.out.println(context);
   	}
   	

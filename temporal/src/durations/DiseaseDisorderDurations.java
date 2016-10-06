@@ -28,7 +28,7 @@ public class DiseaseDisorderDurations {
 	@SuppressWarnings("unchecked")
   public static void main(String[] args) throws CorruptIndexException, IOException, ParseException, InvalidTokenOffsetsException {
 
-	  final String eventFile = "/home/dima/thyme/event-durations/data/unique-disease-disorders.txt";
+	  final String eventFile = "/home/tmill/Data/Projects/ctakes-temporal/durations/unique-disease-disorder.txt";
 
 		Set<String> events = Utils.readSetValuesFromFile(eventFile);
 	  
@@ -61,7 +61,7 @@ public class DiseaseDisorderDurations {
 
 	  final int maxHits = 1000000;
 	  final String searchField = "content";
-	  final String indexLocation = "/home/dima/data/mimic/index/";
+	  final String indexLocation = "/home/tmill/mnt/r/resources/corpora/hNLP/index";
 
 	  IndexReader indexReader = IndexReader.open(FSDirectory.open(new File(indexLocation)));
 	  IndexSearcher indexSearcher = new IndexSearcher(indexReader);
