@@ -3,18 +3,18 @@ package durations;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.store.FSDirectory;
 
 import utils.Utils;
@@ -27,17 +27,21 @@ import utils.Utils;
 
 public class SignSymptomDurations {
 	
-	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException, InvalidTokenOffsetsException {
+	public static void main(String[] args) throws CorruptIndexException, IOException {
+    if(args.length < 2){
+      System.err.println("Two required arguments: <Event file (one per line)> <Lucene index directory>");
+      System.exit(-1);
+    }
 
 		final int maxHits = 1000000;
 		final String searchField = "content";
-		final String indexLocation = "/home/tmill/mnt/rc-pub/resources/tweet_index";
-		final String signAndSymptomFile = "/home/tmill//Data/Projects/ctakes-temporal/durations/unique-disease-disorder.txt";
+		final String indexLocation = args[1];
+		final String signAndSymptomFile = args[0];
 		final String outputDirectory = "/home/tmill/Projects/duration_mining/temporal/output/disease_disorders/";
 		final int contextWindowInCharacters = 140;
 		final List<String> durationIndicators = Arrays.asList("for", "x");
 		
-    IndexReader indexReader = IndexReader.open(FSDirectory.open(new File(indexLocation)));
+    DirectoryReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
     IndexSearcher indexSearcher = new IndexSearcher(indexReader);
 
 		for(String symptom : Utils.readSetValuesFromFile(signAndSymptomFile)) {
@@ -63,7 +67,7 @@ public class SignSymptomDurations {
       writer.close();
 		}
 		
-    indexSearcher.close();
+    indexReader.close();
     System.out.println("done!");
 	}
 }

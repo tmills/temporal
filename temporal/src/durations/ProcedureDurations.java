@@ -1,29 +1,27 @@
 package durations;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Set;
 
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.store.FSDirectory;
-
-import utils.Utils;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 
+import utils.Utils;
+
 public class ProcedureDurations {
 	
-	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException, InvalidTokenOffsetsException {
+	public static void main(String[] args) throws CorruptIndexException, IOException {
 
 	  final String eventFile = "/home/dima/thyme/event-durations/data/unique-procedures.txt";
 
@@ -41,24 +39,25 @@ public class ProcedureDurations {
 	}
 
 	 public static Multiset<String> count(Set<String> events, Set<String> verbs, Set<String> times) 
-	     throws CorruptIndexException, IOException, ParseException, InvalidTokenOffsetsException {
+	     throws CorruptIndexException, IOException {
 
 	    final int maxHits = 1000000;
 	    final String searchField = "content";
 	    final String indexLocation = "/home/dima/data/mimic/index/";
 
-	    IndexReader indexReader = IndexReader.open(FSDirectory.open(new File(indexLocation)));
+	    DirectoryReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
 	    IndexSearcher indexSearcher = new IndexSearcher(indexReader);
 
 	    Multiset<String> eventHitCounts = HashMultiset.create();
 	    for(String event : events) {
 	      for(String verb : verbs) {
 	        for(String time : times) {
-	          PhraseQuery phraseQuery = new PhraseQuery();
-	          phraseQuery.add(new Term(searchField, event));
-	          phraseQuery.add(new Term(searchField, verb));
-	          phraseQuery.add(new Term(searchField, time));
-	          phraseQuery.setSlop(0);
+	          PhraseQuery.Builder queryBuilder = new PhraseQuery.Builder();
+	          queryBuilder.add(new Term(searchField, event));
+	          queryBuilder.add(new Term(searchField, verb));
+	          queryBuilder.add(new Term(searchField, time));
+	          queryBuilder.setSlop(0);
+	          PhraseQuery phraseQuery = queryBuilder.build();
 	          
 	          TopDocs topDocs = indexSearcher.search(phraseQuery, maxHits);
 	          ScoreDoc[] scoreDocs = topDocs.scoreDocs;     
@@ -71,7 +70,7 @@ public class ProcedureDurations {
 	      }
 	    }
 	    
-	    indexSearcher.close();
+	    indexReader.close();
 	    return eventHitCounts;
 	  }
 

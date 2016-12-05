@@ -23,13 +23,13 @@ public class Utils {
    */
   public static PhraseQuery makePhraseQuery(String phrase, String field, int slop) {
     
-    PhraseQuery phraseQuery = new PhraseQuery();
+    PhraseQuery.Builder queryBuilder = new PhraseQuery.Builder();
     for(String word : phrase.split(" ")) {
-      phraseQuery.add(new Term(field, word));
+      queryBuilder.add(new Term(field, word));
     }
-    phraseQuery.setSlop(slop);
+    queryBuilder.setSlop(slop);
     
-    return phraseQuery;
+    return queryBuilder.build();
   }
   
   /**

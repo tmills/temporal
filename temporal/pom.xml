@@ -28,19 +28,49 @@
   		<version>0.8.9</version>
   	</dependency>
   	<dependency>
-  		<groupId>org.apache.lucene</groupId>
-  		<artifactId>lucene-analyzers</artifactId>
-  		<version>3.5.0</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.apache.lucene</groupId>
-  		<artifactId>lucene-queryparser</artifactId>
-  		<version>3.5.0</version>
-  	</dependency>
-  	<dependency>
   		<groupId>org.json</groupId>
   		<artifactId>json</artifactId>
   		<version>20160810</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.ctakes</groupId>
+  		<artifactId>ctakes-temporal</artifactId>
+  		<version>3.2.3-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.ctakes</groupId>
+  		<artifactId>ctakes-temporal-res</artifactId>
+  		<version>3.2.3-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.ctakes</groupId>
+  		<artifactId>ctakes-dictionary-lookup-fast</artifactId>
+  		<version>3.2.3-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.ctakes</groupId>
+  		<artifactId>ctakes-dictionary-lookup-fast-res</artifactId>
+  		<version>3.2.3-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.fasterxml.jackson.datatype</groupId>
+  		<artifactId>jackson-datatype-json-org</artifactId>
+  		<version>2.8.4</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.commons</groupId>
+  		<artifactId>commons-csv</artifactId>
+  		<version>1.4</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.lucene</groupId>
+  		<artifactId>lucene-analyzers-common</artifactId>
+  		<version>6.3.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.lucene</groupId>
+  		<artifactId>lucene-core</artifactId>
+  		<version>6.3.0</version>
   	</dependency>
   </dependencies>
 </project>
