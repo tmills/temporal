@@ -1,27 +1,25 @@
 package index.search;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import javax.swing.JOptionPane;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.store.FSDirectory;
 
 import utils.Utils;
 
 public class SearchUtility {
 	
-	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException, InvalidTokenOffsetsException {
+	public static void main(String[] args) throws CorruptIndexException, IOException {
 
 		final int maxHits = 5000;
 		final String searchField = "content";
@@ -29,16 +27,16 @@ public class SearchUtility {
 
 		String queryText = JOptionPane.showInputDialog("Enter query");
 		
-  	IndexReader indexReader = IndexReader.open(FSDirectory.open(new File(indexLocation)));
+  	DirectoryReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
   	IndexSearcher indexSearcher = new IndexSearcher(indexReader);
 
-  	PhraseQuery phraseQuery = new PhraseQuery();
+  	PhraseQuery.Builder phraseQueryBuilder = new PhraseQuery.Builder();
   	for(String word : queryText.split(" ")) {
-  		phraseQuery.add(new Term(searchField, word));
+  		phraseQueryBuilder.add(new Term(searchField, word));
   	}
-  	phraseQuery.setSlop(0);
+  	phraseQueryBuilder.setSlop(0);
   	
-  	TopDocs topDocs = indexSearcher.search(phraseQuery, maxHits);
+  	TopDocs topDocs = indexSearcher.search(phraseQueryBuilder.build(), maxHits);
   	ScoreDoc[] scoreDocs = topDocs.scoreDocs;  		
 
   	for(ScoreDoc scoreDoc : scoreDocs) {
@@ -48,7 +46,7 @@ public class SearchUtility {
   		System.out.println(context);
   	}
   	
-  	indexSearcher.close();
+  	indexReader.close();
   	System.out.println("total hits: " + scoreDocs.length);
 	}
 }

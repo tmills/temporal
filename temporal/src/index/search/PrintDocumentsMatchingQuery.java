@@ -1,13 +1,12 @@
 package index.search;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
@@ -16,22 +15,22 @@ import org.apache.lucene.store.FSDirectory;
 
 public class PrintDocumentsMatchingQuery {
 	
-	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException {
+	public static void main(String[] args) throws CorruptIndexException, IOException {
 
 		final int maxHits = 100;
 		final String field = "content";
 		final String query = "lasted minutes";
 		
-  	IndexReader indexReader = IndexReader.open(FSDirectory.open(new File("/home/dima/data/mimic/index/")));
+  	DirectoryReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get("/home/dima/data/mimic/index/")));
   	IndexSearcher indexSearcher = new IndexSearcher(indexReader);
   	
-    PhraseQuery phraseQuery = new PhraseQuery();
+    PhraseQuery.Builder queryBuilder = new PhraseQuery.Builder();
     for(String word : query.split(" ")) {
-    	phraseQuery.add(new Term(field, word));
+    	queryBuilder.add(new Term(field, word));
     }
-  	phraseQuery.setSlop(2); 
+  	queryBuilder.setSlop(2); 
   	
-  	TopDocs topDocs = indexSearcher.search(phraseQuery, maxHits);
+  	TopDocs topDocs = indexSearcher.search(queryBuilder.build(), maxHits);
   	ScoreDoc[] scoreDocs = topDocs.scoreDocs;
   	
   	for(ScoreDoc scoreDoc : scoreDocs) {
@@ -41,7 +40,7 @@ public class PrintDocumentsMatchingQuery {
   		System.out.println();
   	}
   	
-  	indexSearcher.close();
+  	indexReader.close();
 	}
 }
 
